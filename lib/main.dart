@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rss_news/login_validate.dart';
+import 'package:rss_news/Auth/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'JboyApp',
-      home: AuthPage(),
+      title: 'RSS News',
+      home: LoginPage(),
     );
   }
 }

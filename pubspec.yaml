@@ -4,7 +4,6 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  # sdk: '>=3.3.3 <4.0.0'
   sdk: '>=3.3.4 <4.0.0'
 
 dependencies:
@@ -13,12 +12,13 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_native_splash: ^2.4.0
   flutter_lints: ^3.0.0
+  url_launcher: ^6.2.6
 
 flutter_native_splash:
   color: '#add8e6'
-  image: 'assets/Image/RSS_icon.png'
+  # image: 'assets/Image/RSS_icon.png'
   color_dark: '#262626'
-  image_dark: 'assets/Image/RSS_icon.png'
+  # image_dark: 'assets/Image/RSS_icon.png'
   fullscreen: true
 
 dev_dependencies:
