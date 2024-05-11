@@ -9,6 +9,7 @@ class InputField extends StatefulWidget {
   final TextInputType keyboardType;
   final IconData? icon;
   final String? Function(String? value) validator;
+  final bool hasOutline;
 
   const InputField({
     super.key,
@@ -18,6 +19,7 @@ class InputField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.icon,
     required this.validator,
+    this.hasOutline = true,
   });
 
   @override
@@ -47,56 +49,18 @@ class InputFieldState extends State<InputField> {
       keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        suffixIcon: _obscureText
+        border:
+            widget.hasOutline ? const OutlineInputBorder() : InputBorder.none,
+        suffixIcon: widget.isObscure
             ? IconButton(
+                // isObscureがtrueの場合のみアイコンを表示
                 icon: Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility),
+                    _obscureText ? Icons.visibility : Icons.visibility_off),
                 onPressed: togglePasswordVisibility,
               )
             : null,
       ),
       validator: widget.validator,
-    );
-  }
-}
-
-// ユーザー名入力フィールドウィジェット
-class UsernameInputField extends StatelessWidget {
-  final TextEditingController controller = TextEditingController();
-
-  UsernameInputField({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return InputField(
-      labelText: 'ユーザー名',
-      controller: controller,
-      validator: AccountValidator.validateUsername,
-    );
-  }
-}
-
-// パスワード入力フィールドウィジェット
-class PasswordInputField extends StatefulWidget {
-  final TextEditingController controller;
-
-  const PasswordInputField({super.key, required this.controller});
-
-  @override
-  State<PasswordInputField> createState() => PasswordInputFieldState();
-}
-
-class PasswordInputFieldState extends State<PasswordInputField> {
-  @override
-  Widget build(BuildContext context) {
-    return InputField(
-      labelText: 'パスワード',
-      controller: widget.controller,
-      isObscure: true,
-      validator: AccountValidator.validatePassword,
     );
   }
 }
@@ -110,10 +74,53 @@ class EmailInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InputField(
-      labelText: 'Email',
-      controller: controller,
+      labelText: 'メールアドレス',
       keyboardType: TextInputType.emailAddress,
+      controller: controller,
+      isObscure: false,
+      // メールアドレスのバリデーションを適用
       validator: AccountValidator.validateEmail,
+      hasOutline: true,
+    );
+  }
+}
+
+// パスワード入力フィールドウィジェット
+class PasswordInputField extends StatelessWidget {
+  final TextEditingController controller;
+
+  const PasswordInputField({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return InputField(
+      labelText: 'パスワード',
+      keyboardType: TextInputType.visiblePassword,
+      controller: controller,
+      isObscure: true,
+      // パスワードのバリデーションを適用
+      validator: AccountValidator.validatePassword,
+      hasOutline: true,
+    );
+  }
+}
+
+// ユーザー名入力フィールドウィジェット
+class UsernameInputField extends StatelessWidget {
+  final TextEditingController controller;
+
+  const UsernameInputField({super.key, required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return InputField(
+      labelText: 'パスワード',
+      keyboardType: TextInputType.text,
+      controller: controller,
+      isObscure: false,
+      // ユーザー名のバリデーションを適用
+      validator: AccountValidator.validateUsername,
+      hasOutline: true,
     );
   }
 }

@@ -34,6 +34,13 @@ class AccountValidator {
     if (value.length < 10) {
       return 'パスワードは10文字以上である必要があります';
     }
+
+    // 英数字と一部の記号のみ許可する
+    String pattern = r'^[a-zA-Z0-9!@#$%^&*()_+={}|:;<>,.?~-]+$';
+    if (!RegExp(pattern).hasMatch(value)) {
+      return 'パスワードは英数字および指定された記号のみを含むことができます';
+    }
+
     return null;
   }
 
