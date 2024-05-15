@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rss_news/Auth/signup_page.dart';
+import 'package:rss_news/auth/signup_page.dart';
 import 'package:rss_news/widget/account_component.dart';
 import 'package:rss_news/widget/common_styles.dart';
 import 'package:rss_news/reader/main_page.dart';

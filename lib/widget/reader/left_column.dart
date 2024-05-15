@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/reader/dummy_screen.dart';
+import 'package:rss_news/reader/left_column/setting.dart';
+import 'package:rss_news/reader/left_column/acknowledgement.dart';
 
 class LeftColumn extends StatelessWidget {
   const LeftColumn({super.key});
@@ -16,35 +18,28 @@ class LeftColumn extends StatelessWidget {
             ),
             child: Text('メニュー'),
           ),
-          ListTile(
-            title: const Text('謝辞'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DummyScreen()),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('利用規約'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DummyScreen()),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('プライバシーポリシー'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DummyScreen()),
-              );
-            },
-          ),
+          _buildListTile(context, Icons.settings, '設定', const Setting()),
+          _buildListTile(context, Icons.info, '謝辞', const Acknowledgement()),
+          _buildListTile(
+              context, Icons.description, '利用規約', const DummyScreen()),
+          _buildListTile(
+              context, Icons.privacy_tip, 'プライバシーポリシー', const DummyScreen()),
         ],
       ),
+    );
+  }
+
+  ListTile _buildListTile(
+      BuildContext context, IconData icon, String title, Widget screen) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title, style: const TextStyle(color: Colors.black)),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      },
     );
   }
 }

@@ -24,38 +24,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  // サイドメニューの表示状態を管理する変数
-  bool _isDrawerOpen = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            setState(() {
-              _isDrawerOpen = !_isDrawerOpen;
-            });
+        backgroundColor: Colors.white,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
         ),
       ),
-      // サイドメニューを表示/非表示
-      drawer: _isDrawerOpen ? const LeftColumn() : null,
+      drawer: const LeftColumn(),
       body: Row(
         children: <Widget>[
-          _isDrawerOpen
-              ? Expanded(
-                  flex: 1,
-                  child: Container(
-                    color: Colors.blue,
-                  ),
-                )
-              // サイドメニューが非表示の場合は空のContainerを表示
-              : Container(),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Container(
               color: Colors.white,
               child: ListView.builder(
