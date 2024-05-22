@@ -17,11 +17,13 @@ class Acknowledgement extends StatelessWidget {
           children: const [
             AcknowledgementContent(),
             SizedBox(height: 20),
+            Producer(),
+            SizedBox(height: 20),
             ProjectOverview(),
             SizedBox(height: 20),
             UsedModules(),
-            SizedBox(height: 20),
-            Collaborators(),
+            // SizedBox(height: 20),
+            // Collaborators(),
           ],
         ),
       ),
@@ -130,7 +132,7 @@ class UsedModules extends StatelessWidget {
         ),
         SizedBox(height: 10),
         Text(
-          'このプロジェクトは、Flutterを使用して開発されたアプリケーションです。',
+          'このアプリは、Flutterを使用して開発されたアプリケーションです。',
           style: descriptionStyle,
         ),
         OpenableText(prefix: 'flutter: ', url: 'https://flutter.dev'),
@@ -165,8 +167,40 @@ class UsedModules extends StatelessWidget {
   }
 }
 
-class Collaborators extends StatelessWidget {
-  const Collaborators({super.key});
+// class Collaborators extends StatelessWidget {
+//   const Collaborators({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           '協力者',
+//           style: TextStyle(
+//             fontSize: 18,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         SizedBox(height: 10),
+//         Text(
+//           'このプロジェクトの成功には多くの協力者の貢献がありました。'
+//           '特に、技術的なアドバイスやコードレビューを行ってくれた方々に感謝します。',
+//           style: TextStyle(fontSize: 16),
+//         ),
+//         SizedBox(height: 10),
+//         Text(
+//           '',
+//           style: TextStyle(fontSize: 16),
+//         ),
+//       ],
+//     );
+//   }
+// }
+
+// アプリの制作者
+class Producer extends StatelessWidget {
+  const Producer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +208,7 @@ class Collaborators extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '協力者',
+          '制作者',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -182,14 +216,12 @@ class Collaborators extends StatelessWidget {
         ),
         SizedBox(height: 10),
         Text(
-          'このプロジェクトの成功には多くの協力者の貢献がありました。'
-          '特に、技術的なアドバイスやコードレビューを行ってくれた方々に感謝します。',
+          'このアプリは、Neuron Gridによって開発されました。',
           style: TextStyle(fontSize: 16),
         ),
-        SizedBox(height: 10),
-        Text(
-          '',
-          style: TextStyle(fontSize: 16),
+        OpenableText(
+          prefix: '連絡先: ',
+          url: 'https://contact.neuron-grid.net/',
         ),
       ],
     );

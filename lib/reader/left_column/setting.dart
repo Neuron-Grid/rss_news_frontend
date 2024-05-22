@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/reader/dummy_screen.dart';
+import 'package:rss_news/setting/account/setting.dart';
+import 'package:rss_news/setting/app/app_setting.dart';
 
 class Setting extends StatelessWidget {
   const Setting({super.key});
@@ -32,16 +34,14 @@ class Setting extends StatelessWidget {
             title: const Text('アカウント設定'),
             onTap: () {
               // アカウント設定画面に遷移
-              // ダミー画面に遷移
-              const DummyScreen();
+              const AccountSetting();
             },
           ),
           ListTile(
             title: const Text('アプリ設定'),
             onTap: () {
               // アプリ設定画面に遷移
-              // ダミー画面に遷移
-              const DummyScreen();
+              const AppSetting();
             },
           ),
         ],
