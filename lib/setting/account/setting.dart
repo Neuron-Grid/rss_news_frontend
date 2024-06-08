@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rss_news/auth/logout.dart';
 
 // アカウント設定画面
 class AccountSetting extends StatelessWidget {
@@ -28,9 +29,10 @@ class AccountSetting extends StatelessWidget {
             title: Text('パスワード変更'),
             onTap: null,
           ),
-          ListTile(
-            title: Text('ログアウト'),
-            onTap: null,
+          // ログアウトボタン
+          // logout.dart
+          Logout(
+            key: Key('logout'),
           ),
         ],
       ),

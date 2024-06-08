@@ -1,45 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/auth/signup_page.dart';
-import 'package:rss_news/widget/account_component.dart';
-import 'package:rss_news/widget/common_styles.dart';
 import 'package:rss_news/reader/main_page.dart';
+import 'package:rss_news/widget/account_component.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final LoginService _loginService = LoginService();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  // ユーザー認証を行う
-  void _authenticateUser() {
-    if (_formKey.currentState!.validate()) {
-      _showLoginSuccess();
-    }
+  @override
+  void initState() {
+    super.initState();
+    _loginService.initialize();
   }
 
-  // ログイン成功時のスナックバーを表示
-  void _showLoginSuccess() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('成功しました。ログイン中です。'),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: 'OK',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MyHomePage()),
-            );
-          },
-        ),
-      ),
-    );
+  void _authenticateUser() async {
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text;
+      String password = _passwordController.text;
+
+      // Encrypt email and password
+      String encryptedEmail = await _loginService.encrypt(email);
+      String encryptedPassword = await _loginService.encrypt(password);
+
+      // Store encrypted data
+      await _storage.write(key: 'email', value: encryptedEmail);
+      await _storage.write(key: 'password', value: encryptedPassword);
+
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyHomePage()),
+      );
+    }
   }
 
   @override
@@ -62,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginForm() {
     return Center(
       child: Container(
-        padding: CommonStyles.pagePadding,
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: _formFields(),
