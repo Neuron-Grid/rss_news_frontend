@@ -5,13 +5,14 @@ import 'package:rss_news/reader/dummy_screen.dart';
 import 'package:rss_news/setting/account/setting.dart';
 import 'package:rss_news/setting/app/app_setting.dart';
 
+// 設定画面ウィジェット
 class Setting extends StatefulWidget {
   const Setting({super.key});
-
   @override
   SettingState createState() => SettingState();
 }
 
+// 設定画面のステート
 class SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
@@ -21,60 +22,56 @@ class SettingState extends State<Setting> {
       ),
       body: ListView(
         children: [
-          ListTile(
-            title: const Text('RSSフィード設定'),
-            onTap: () {
-              if (mounted) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const DummyScreen()),
-                );
-              }
-            },
+          _buildListTile(
+            title: 'RSSフィード設定',
+            destination: const DummyScreen(),
           ),
-          ListTile(
-            title: const Text('表示設定'),
-            onTap: () {
-              if (mounted) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const DummyScreen()),
-                );
-              }
-            },
+          _buildListTile(
+            title: '表示設定',
+            destination: const DummyScreen(),
           ),
-          ListTile(
-            title: const Text('アカウント設定'),
-            onTap: () {
-              if (mounted) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const AccountSetting()),
-                );
-              }
-            },
+          _buildListTile(
+            title: 'アカウント設定',
+            destination: const AccountSetting(),
           ),
-          ListTile(
-            title: const Text('アプリ設定'),
-            onTap: () {
-              if (mounted) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const AppSetting()),
-                );
-              }
-            },
+          _buildListTile(
+            title: 'アプリ設定',
+            destination: const AppSetting(),
           ),
-          ListTile(
-            title: const Text('ログアウト'),
-            onTap: () async {
-              final loginService = LoginService();
-              await loginService.logout();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-                (route) => false,
-              );
-            },
-          ),
+          _buildLogoutTile(),
         ],
       ),
+    );
+  }
+
+  // リストタイルを作成するヘルパーメソッド
+  Widget _buildListTile({required String title, required Widget destination}) {
+    return ListTile(
+      title: Text(title),
+      onTap: () {
+        if (mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => destination),
+          );
+        }
+      },
+    );
+  }
+
+  // ログアウトのリストタイルを作成するヘルパーメソッド
+  Widget _buildLogoutTile() {
+    return ListTile(
+      title: const Text('ログアウト'),
+      onTap: () async {
+        final loginService = LoginService();
+        await loginService.logout();
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+            (route) => false,
+          );
+        }
+      },
     );
   }
 }

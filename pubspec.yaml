@@ -22,7 +22,6 @@ flutter_native_splash:
   color: '#add8e6'
   # image: 'assets/Image/RSS_icon.png'
   color_dark: '#262626'
-  # image_dark: 'assets/Image/RSS_icon.png'
   fullscreen: true
 
 dev_dependencies:
