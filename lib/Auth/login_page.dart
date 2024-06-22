@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/auth/signup_page.dart';
 import 'package:rss_news/reader/main_page.dart';
@@ -16,37 +15,48 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final LoginService _loginService = LoginService();
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   @override
   void initState() {
     super.initState();
-    _loginService.initialize();
+    _checkIfAlreadyLoggedIn();
   }
 
-  void _authenticateUser() async {
+  Future<void> _checkIfAlreadyLoggedIn() async {
+    await _loginService.initialize();
+    final bool isLoggedIn = await _loginService.isLoggedIn();
+    if (!mounted) return;
+    if (isLoggedIn) {
+      _navigateToHomePage();
+    }
+  }
+
+  Future<void> _authenticateUser() async {
     if (_formKey.currentState!.validate()) {
-      String email = _emailController.text;
-      String password = _passwordController.text;
-
-      // Encrypt email and password
-      String encryptedEmail = await _loginService.encrypt(email);
-      String encryptedPassword = await _loginService.encrypt(password);
-
-      // Store encrypted data
-      await _storage.write(key: 'email', value: encryptedEmail);
-      await _storage.write(key: 'password', value: encryptedPassword);
-
-      if (!mounted) {
+      final String email = _emailController.text;
+      final String password = _passwordController.text;
+      final String username = _usernameController.text;
+      try {
+        await _loginService.saveLoginInfo(email, username, password);
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('ログインに失敗しました。')),
+        );
         return;
       }
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MyHomePage()),
-      );
+      if (!mounted) return;
+      _navigateToHomePage();
     }
+  }
+
+  void _navigateToHomePage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyHomePage()),
+    );
   }
 
   @override
@@ -57,7 +67,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  // アプリバーを生成
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text('ログイン'),
@@ -65,24 +74,24 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ログインフォームを生成
   Widget _buildLoginForm() {
     return Center(
       child: Container(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: _formFields(),
+          child: _buildFormFields(),
         ),
       ),
     );
   }
 
-  // フォームフィールドを生成
-  Widget _formFields() {
+  Widget _buildFormFields() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        UsernameInputField(controller: _usernameController),
+        const SizedBox(height: 20),
         EmailInputField(controller: _emailController),
         const SizedBox(height: 20),
         PasswordInputField(controller: _passwordController),
@@ -94,7 +103,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ログインボタンを生成
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: _authenticateUser,
@@ -102,7 +110,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  // サインアップリンクを生成
   Widget _buildSignUpLink() {
     return InkWell(
       onTap: _navigateToSignUp,
@@ -116,7 +123,6 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  // サインアップページへのナビゲーション
   void _navigateToSignUp() {
     Navigator.push(
       context,

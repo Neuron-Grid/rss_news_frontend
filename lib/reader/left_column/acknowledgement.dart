@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:rss_news/validator/url_opener.dart';
 
 class Acknowledgement extends StatelessWidget {
   const Acknowledgement({super.key});
@@ -22,8 +22,6 @@ class Acknowledgement extends StatelessWidget {
             ProjectOverview(),
             SizedBox(height: 20),
             UsedModules(),
-            // SizedBox(height: 20),
-            // Collaborators(),
           ],
         ),
       ),
@@ -42,17 +40,12 @@ class OpenableText extends StatefulWidget {
 }
 
 class OpenableTextState extends State<OpenableText> {
-  void _openUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('URLを開けませんでした。')),
-        );
-      }
-    }
+  late UrlOpener urlOpener;
+
+  @override
+  void initState() {
+    super.initState();
+    urlOpener = UrlOpener(context);
   }
 
   @override
@@ -76,7 +69,7 @@ class OpenableTextState extends State<OpenableText> {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                _openUrl(widget.url);
+                urlOpener.openUrl(widget.url);
               },
           ),
         ],
@@ -126,10 +119,7 @@ class UsedModules extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '使用したモジュール',
-          style: titleStyle,
-        ),
+        Text('使用したモジュール', style: titleStyle),
         SizedBox(height: 10),
         Text(
           'このアプリは、Flutterを使用して開発されたアプリケーションです。',
@@ -166,37 +156,6 @@ class UsedModules extends StatelessWidget {
     );
   }
 }
-
-// class Collaborators extends StatelessWidget {
-//   const Collaborators({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(
-//           '協力者',
-//           style: TextStyle(
-//             fontSize: 18,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         SizedBox(height: 10),
-//         Text(
-//           'このプロジェクトの成功には多くの協力者の貢献がありました。'
-//           '特に、技術的なアドバイスやコードレビューを行ってくれた方々に感謝します。',
-//           style: TextStyle(fontSize: 16),
-//         ),
-//         SizedBox(height: 10),
-//         Text(
-//           '',
-//           style: TextStyle(fontSize: 16),
-//         ),
-//       ],
-//     );
-//   }
-// }
 
 // アプリの制作者
 class Producer extends StatelessWidget {

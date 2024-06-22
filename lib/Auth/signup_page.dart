@@ -54,6 +54,7 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  /// メールアドレス入力フィールドの生成
   Widget _buildEmailField() {
     return InputField(
       labelText: 'メールアドレス',
@@ -64,6 +65,7 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  /// ユーザー名入力フィールドの生成
   Widget _buildUsernameField() {
     return InputField(
       labelText: 'ユーザー名',
@@ -72,6 +74,7 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  /// パスワード入力フィールドの生成
   Widget _buildPasswordField() {
     return InputField(
       labelText: 'パスワード',
@@ -82,6 +85,7 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  /// サインアップボタンの生成
   Widget _buildSignUpButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
@@ -89,14 +93,14 @@ class SignUpPageState extends State<SignUpPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('登録が成功しました。ログイン中です。')),
           );
-          // 登録情報を暗号化して保存
           await _saveAccountInfo();
         }
       },
-      child: const Text('ログイン'),
+      child: const Text('サインアップ'),
     );
   }
 
+  /// ログインリンクの生成
   Widget _buildLoginLink(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -112,9 +116,9 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  /// 登録情報の保存
   Future<void> _saveAccountInfo() async {
     try {
-      // LoginServiceを利用して情報を暗号化し、保存します
       await _loginService.saveLoginInfo(
         _emailController.text,
         _usernameController.text,

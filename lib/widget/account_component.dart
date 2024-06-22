@@ -114,7 +114,7 @@ class UsernameInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InputField(
-      labelText: 'パスワード',
+      labelText: 'ユーザー名',
       keyboardType: TextInputType.text,
       controller: controller,
       isObscure: false,

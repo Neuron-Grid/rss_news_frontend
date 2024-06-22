@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/widget/reader/left_column.dart';
 
-void main() => runApp(const MyApp());
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
