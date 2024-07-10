@@ -12,21 +12,22 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  static of(BuildContext context) {}
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  MyHomePageState createState() => MyHomePageState();
+  HomePage createState() => HomePage();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class HomePage extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -43,16 +44,13 @@ class MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Expanded(
             flex: 2,
-            child: Container(
-              color: Colors.white,
-              child: ListView.builder(
-                itemCount: 30,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Item $index'),
-                  );
-                },
-              ),
+            child: ListView.builder(
+              itemCount: 30,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text('Item $index'),
+                );
+              },
             ),
           ),
         ],

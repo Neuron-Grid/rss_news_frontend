@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/reader/dummy_screen.dart';
 import 'package:rss_news/reader/left_column/acknowledgement.dart';
-import 'package:rss_news/reader/left_column/setting.dart';
+import 'package:rss_news/reader/left_column/main_setting.dart';
 
 class LeftColumn extends StatelessWidget {
   const LeftColumn({super.key});
+
+  final TextStyle titleTextStyle = const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +22,19 @@ class LeftColumn extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(20.0),
                   alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(top: 20.0),
                   child: const Text(
                     'メニュー',
                     style: TextStyle(
-                      color: Colors.black,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 Image.asset(
-                  '/assets/images/1500x500.png',
+                  'assets/images/1500x500.png',
                   fit: BoxFit.contain,
                 ),
               ],
@@ -50,7 +55,7 @@ class LeftColumn extends StatelessWidget {
       BuildContext context, IconData icon, String title, Widget screen) {
     return ListTile(
       leading: Icon(icon),
-      title: Text(title, style: const TextStyle(color: Colors.black)),
+      title: Text(title, style: titleTextStyle),
       onTap: () {
         Navigator.push(
           context,

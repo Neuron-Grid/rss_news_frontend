@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UrlOpener {
   final BuildContext context;
+  final Logger logger = Logger();
+
+  // 名前付き引数を使用するコンストラクタ
   UrlOpener(this.context);
 
   Future<void> openUrl(String url) async {
@@ -14,7 +18,6 @@ class UrlOpener {
 
     if (await canLaunchUrl(uri)) {
       try {
-        // 外部のブラウザでURLを開く
         await launchUrl(
           uri,
           mode: LaunchMode.externalApplication,
@@ -28,13 +31,35 @@ class UrlOpener {
   }
 
   void _showSnackBar(String message) {
-    if (context.mounted) {
-      final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
-      if (scaffoldMessenger != null) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text(message)),
+    final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
+    if (scaffoldMessenger != null) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } else {
+      logger.w(message);
+    }
+  }
+
+  // 静的メソッド
+  static Future<void> openUrlStatic(String url) async {
+    final Uri? uri = Uri.tryParse(url);
+    if (uri == null) {
+      Logger().w('無効なURLです。');
+      return;
+    }
+
+    if (await canLaunchUrl(uri)) {
+      try {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
         );
+      } catch (e) {
+        Logger().e('URLを開けませんでした。');
       }
+    } else {
+      Logger().e('URLを開けませんでした。');
     }
   }
 }

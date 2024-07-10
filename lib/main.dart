@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:rss_news/auth/login_page.dart';
 import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/reader/main_page.dart';
@@ -12,9 +13,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final sourceHanCodeJPTextTheme = Theme.of(context).textTheme.apply(
+          fontFamily: 'Source Han Code JP',
+        );
+
+    final darkSourceHanCodeJPTextTheme = ThemeData.dark().textTheme.apply(
+          fontFamily: 'Source Han Code JP',
+        );
+
+    return MaterialApp(
       title: 'RSS News',
-      home: AuthCheckPage(),
+      theme: ThemeData(
+        textTheme: sourceHanCodeJPTextTheme,
+      ),
+      darkTheme: ThemeData.dark().copyWith(
+        textTheme: darkSourceHanCodeJPTextTheme,
+      ),
+      themeMode: ThemeMode.system,
+      home: const AuthCheckPage(),
     );
   }
 }
@@ -24,6 +40,8 @@ class AuthCheckPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var logger = Logger();
+
     return FutureBuilder<bool>(
       future: LoginService().isLoggedIn(),
       builder: (context, snapshot) {
@@ -35,8 +53,10 @@ class AuthCheckPage extends StatelessWidget {
         } else {
           // エラー発生時の表示
           if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(child: Text('Error\n ${snapshot.error}')),
+            // エラーをログに記録
+            logger.e('Error\n ${snapshot.error}');
+            return const Scaffold(
+              body: Center(child: Text('エラーが発生しました。')),
             );
           } else {
             // ログイン状態に応じた表示

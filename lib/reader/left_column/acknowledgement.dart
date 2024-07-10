@@ -40,36 +40,33 @@ class OpenableText extends StatefulWidget {
 }
 
 class OpenableTextState extends State<OpenableText> {
-  late UrlOpener urlOpener;
-
-  @override
-  void initState() {
-    super.initState();
-    urlOpener = UrlOpener(context);
-  }
+  UrlOpener? urlOpener;
 
   @override
   Widget build(BuildContext context) {
+    urlOpener ??= UrlOpener(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     return RichText(
       text: TextSpan(
+        style: TextStyle(
+          fontSize: 16,
+          color: textColor,
+        ),
         children: [
           TextSpan(
             text: widget.prefix,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-            ),
           ),
           TextSpan(
             text: widget.url,
             style: const TextStyle(
               color: Colors.blue,
-              fontSize: 16,
               decoration: TextDecoration.underline,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                urlOpener.openUrl(widget.url);
+                urlOpener?.openUrl(widget.url);
               },
           ),
         ],
@@ -152,12 +149,16 @@ class UsedModules extends StatelessWidget {
           prefix: 'RSS News API: ',
           url: 'https://gitlab.com/Neuron-Grid/RSS_News_API',
         ),
+        OpenableText(
+          prefix: 'Source Han Code JP: ',
+          url:
+              'https://github.com/adobe-fonts/source-han-code-jp/blob/master/LICENSE.txt',
+        ),
       ],
     );
   }
 }
 
-// アプリの制作者
 class Producer extends StatelessWidget {
   const Producer({super.key});
 

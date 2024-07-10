@@ -1,5 +1,5 @@
 name: rss_news
-description: "RSS News App"
+description: "RSS News"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -17,6 +17,10 @@ dependencies:
   encrypt: ^5.0.3
   cryptography: ^2.7.0
   logger: ^2.3.0
+  shared_preferences: ^2.2.3
+  provider: ^6.1.2
+  http: ^1.2.1
+  flutter_dotenv: ^5.1.0
 
 flutter_native_splash:
   color: '#add8e6'
@@ -30,8 +34,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Source Han Code JP
+      fonts:
+        - asset: assets/fonts/SourceHanCodeJP.ttc
+          weight: 500
   assets:
-    - assets/image/
+    - assets/images/1500x500.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

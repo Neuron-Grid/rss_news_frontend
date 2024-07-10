@@ -4,11 +4,14 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 
 // 暗号化方式と関連変数の定義
 final useCipher = Xchacha20.poly1305Aead();
 const nonceLength = 24;
 const macLength = 16;
+// loggerのインスタンスを作成
+final Logger logger = Logger();
 
 class LoginService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -36,7 +39,8 @@ class LoginService {
       }
       _key = SecretKey(base64Url.decode(storedKey));
     } catch (e) {
-      throw Exception('Failed to initialize encryption key: $e');
+      logger.e('Failed to initialize encryption key', error: e);
+      throw Exception('セキュリティ上のエラーが発生しました。');
     }
   }
 
@@ -72,7 +76,8 @@ class LoginService {
       );
       return base64UrlEncode(secretBox.concatenation());
     } catch (e) {
-      throw Exception('Encryption failed: $e');
+      logger.e('Encryption failed', error: e);
+      throw Exception('セキュリティ上のエラーが発生しました。');
     }
   }
 
@@ -88,7 +93,8 @@ class LoginService {
       final decrypted = await useCipher.decrypt(secretBox, secretKey: _key);
       return utf8.decode(decrypted);
     } catch (e) {
-      throw Exception('Decryption failed: $e');
+      logger.e('Decryption failed', error: e);
+      throw Exception('セキュリティ上のエラーが発生しました。');
     }
   }
 
@@ -102,7 +108,6 @@ class LoginService {
   Future<bool> isLoggedIn() async {
     final keys = await Future.wait([
       _storage.read(key: 'encryption_key'),
-      _storage.read(key: 'email'),
       _storage.read(key: 'username'),
       _storage.read(key: 'password'),
     ]);
@@ -115,12 +120,12 @@ class LoginService {
     await _ensureInitialized();
     try {
       await Future.wait([
-        _storage.write(key: 'email', value: await encrypt(email)),
         _storage.write(key: 'username', value: await encrypt(username)),
         _storage.write(key: 'password', value: await encrypt(password)),
       ]);
     } catch (e) {
-      throw Exception('Failed to save login information: $e');
+      logger.e('Failed to save login information', error: e);
+      throw Exception('セキュリティ上のエラーが発生しました。');
     }
   }
 
@@ -128,7 +133,6 @@ class LoginService {
   Future<Map<String, String>> getLoginInfo() async {
     await _ensureInitialized();
     final keys = await Future.wait([
-      _storage.read(key: 'email'),
       _storage.read(key: 'username'),
       _storage.read(key: 'password'),
     ]);
@@ -141,16 +145,15 @@ class LoginService {
       final decryptedKeys = await Future.wait([
         decrypt(keys[0]!),
         decrypt(keys[1]!),
-        decrypt(keys[2]!),
       ]);
 
       return {
-        'email': decryptedKeys[0],
-        'username': decryptedKeys[1],
-        'password': decryptedKeys[2],
+        'username': decryptedKeys[0],
+        'password': decryptedKeys[1],
       };
     } catch (e) {
-      throw Exception('Failed to retrieve login information: $e');
+      logger.e('Failed to retrieve login information', error: e);
+      throw Exception('セキュリティ上のエラーが発生しました。');
     }
   }
 }

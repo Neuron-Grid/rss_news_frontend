@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rss_news/setting/app/theme_mode_selection.dart';
 
-// アプリ設定画面
 class AppSetting extends StatelessWidget {
   const AppSetting({super.key});
 
@@ -11,20 +11,25 @@ class AppSetting extends StatelessWidget {
         title: const Text('アプリ設定'),
       ),
       body: ListView(
-        children: const [
+        children: [
           ListTile(
-            title: Text('テーマ設定'),
-            onTap: null,
+            title: const Text('テーマ設定'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ThemeModeSelection(
+                    onThemeModeChanged: (newThemeMode) {},
+                  ),
+                ),
+              );
+            },
           ),
-          ListTile(
-            title: Text('言語設定'),
-            onTap: null,
-          ),
-          ListTile(
+          const ListTile(
             title: Text('プッシュ通知設定'),
             onTap: null,
           ),
-          ListTile(
+          const ListTile(
             title: Text('バージョン情報'),
             onTap: null,
           ),
