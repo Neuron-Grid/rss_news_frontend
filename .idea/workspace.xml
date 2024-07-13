@@ -8,24 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/Image/1500x500.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Auth/login_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Auth/login_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Auth/signup_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Auth/signup_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/reader/left_column/acknowledgement.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/reader/left_column/acknowledgement.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/reader/left_column/setting.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/reader/main_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/reader/main_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/setting/account/setting.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/setting/app/app_setting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/setting/app/app_setting.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/validator/url_opener.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/validator/url_opener.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/widget/common_styles.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/widget/reader/left_column.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widget/reader/left_column.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rss_news.iml" beforeDir="false" afterPath="$PROJECT_DIR$/rss_news.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,16 +88,5 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
     </layout>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$USER_HOME$/.flutter/packages/flutter/lib/src/widgets/framework.dart</url>
-          <line>938</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

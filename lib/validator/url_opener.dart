@@ -6,27 +6,29 @@ class UrlOpener {
   final BuildContext context;
   final Logger logger = Logger();
 
-  // 名前付き引数を使用するコンストラクタ
   UrlOpener(this.context);
 
   Future<void> openUrl(String url) async {
     final Uri? uri = Uri.tryParse(url);
     if (uri == null) {
       _showSnackBar('無効なURLです。');
+      logger.w('無効なURLです: $url');
       return;
     }
 
-    if (await canLaunchUrl(uri)) {
-      try {
-        await launchUrl(
-          uri,
-          mode: LaunchMode.externalApplication,
-        );
-      } catch (e) {
-        _showSnackBar('URLを開けませんでした。');
+    try {
+      final bool launched = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) {
+        // フォールバックオプションをここに追加
+        _showSnackBar('URLを開けませんでした。デフォルトブラウザで開いてください。');
       }
-    } else {
-      _showSnackBar('URLを開けませんでした。');
+    } catch (e) {
+      _showSnackBar('URLを開けませんでした: $e');
+      logger.e('URLを開けませんでした。\n $url \nError: $e');
+      // ここでより詳細なエラーハンドリングやデバッグ情報の出力を行う
     }
   }
 
@@ -41,7 +43,6 @@ class UrlOpener {
     }
   }
 
-  // 静的メソッド
   static Future<void> openUrlStatic(String url) async {
     final Uri? uri = Uri.tryParse(url);
     if (uri == null) {
@@ -56,7 +57,7 @@ class UrlOpener {
           mode: LaunchMode.externalApplication,
         );
       } catch (e) {
-        Logger().e('URLを開けませんでした。');
+        Logger().e('URLを開けませんでした。\n $url \nError: $e');
       }
     } else {
       Logger().e('URLを開けませんでした。');

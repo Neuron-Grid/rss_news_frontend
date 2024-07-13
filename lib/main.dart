@@ -5,6 +5,7 @@ import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/reader/main_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
