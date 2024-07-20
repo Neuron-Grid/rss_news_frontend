@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rss_news/validator/url_opener.dart';
 import 'package:rss_news/widget/reader/left_column.dart';
 
 class MyApp extends StatelessWidget {
@@ -49,6 +50,10 @@ class HomePage extends State<MyHomePage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text('Item $index'),
+                  onTap: () {
+                    UrlOpener(context)
+                        .openUrl('https://www.google.com/webhp?hl=ja');
+                  },
                 );
               },
             ),

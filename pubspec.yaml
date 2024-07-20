@@ -41,6 +41,7 @@ flutter:
           weight: 500
   assets:
     - assets/images/1500x500.png
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 
@@ -12,6 +13,10 @@ const nonceLength = 24;
 const macLength = 16;
 // loggerのインスタンスを作成
 final Logger logger = Logger();
+
+// APIキーとサーバーのURLの定義
+final String apiKey = dotenv.env['API_KEY']!;
+final String serverUrl = dotenv.env['SERVER_URL']!;
 
 class LoginService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();

@@ -22,13 +22,11 @@ class UrlOpener {
         mode: LaunchMode.externalApplication,
       );
       if (!launched) {
-        // フォールバックオプションをここに追加
         _showSnackBar('URLを開けませんでした。デフォルトブラウザで開いてください。');
       }
     } catch (e) {
       _showSnackBar('URLを開けませんでした: $e');
       logger.e('URLを開けませんでした。\n $url \nError: $e');
-      // ここでより詳細なエラーハンドリングやデバッグ情報の出力を行う
     }
   }
 

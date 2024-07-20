@@ -1,27 +1,41 @@
-// httpsでの通信を強制する
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiValidator {
-  static const String _httpPattern = r'^http://';
-  static const String _httpsPattern = r'^https://';
+  static const String defaultEnv = 'development';
+  static const String defaultApiBaseUrl = 'http://localhost:3000';
+  static const String httpsPrefix = 'https://';
+  static const String httpPrefix = 'http://';
 
-  // URLがhttpで始まっているかどうかを判定する
-  static bool isHttpUrl({required String url}) {
-    return RegExp(_httpPattern).hasMatch(url);
+  static final String _env = dotenv.env['ENV'] ?? defaultEnv;
+  static final String _apiBaseUrl =
+      dotenv.env['API_BASE_URL'] ?? defaultApiBaseUrl;
+
+  static final RegExp httpPattern = RegExp(r'^http://');
+  static final RegExp httpsPattern = RegExp(r'^https://');
+
+  static bool hasHttpScheme(String url) {
+    return httpPattern.hasMatch(url);
   }
 
-  // URLがhttpsで始まっているかどうかを判定する
-  static bool isHttpsUrl({required String url}) {
-    return RegExp(_httpsPattern).hasMatch(url);
+  static bool hasHttpsScheme(String url) {
+    return httpsPattern.hasMatch(url);
   }
 
-  // URLがhttpsで始まっているかどうかを判定し、そうでない場合はhttpsで始まるURLに変換する
-  static String convertToHttpsUrl({required String url}) {
-    if (isHttpsUrl(url: url)) {
+  static String convertToHttpsUrl(String url) {
+    if (hasHttpsScheme(url)) {
       return url;
-    } else if (isHttpUrl(url: url)) {
-      return url.replaceFirst(RegExp(_httpPattern), 'https://');
+    } else if (hasHttpScheme(url)) {
+      return url.replaceFirst(httpPattern, httpsPrefix);
     } else {
-      return 'https://$url';
+      return '$httpsPrefix$url';
     }
+  }
+
+  static String getApiBaseUrl() {
+    return convertToHttpsUrl(_apiBaseUrl);
+  }
+
+  static bool isProduction() {
+    return _env == 'production';
   }
 }

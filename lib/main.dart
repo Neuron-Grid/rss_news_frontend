@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 import 'package:rss_news/auth/login_page.dart';
 import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/reader/main_page.dart';
 
 void main() {
+  dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/auth/logout.dart';
+import 'package:rss_news/setting/account/change_email.dart' as change_email;
+import 'package:rss_news/setting/account/change_password.dart';
+import 'package:rss_news/setting/account/change_username.dart';
 
 // アカウント設定画面
 class AccountSetting extends StatelessWidget {
@@ -12,28 +15,44 @@ class AccountSetting extends StatelessWidget {
         title: const Text('アカウント設定'),
       ),
       body: ListView(
-        children: const [
-          ListTile(
+        children: [
+          const ListTile(
             title: Text('アカウント情報'),
-            onTap: null,
           ),
           ListTile(
-            title: Text('ユーザー名変更'),
-            onTap: null,
+            title: const Text('ユーザー名変更'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChangeUsernamePage()),
+              );
+            },
           ),
           ListTile(
-            title: Text('メールアドレス変更'),
-            onTap: null,
+            title: const Text('メールアドレス変更'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const change_email.ChangeEmailPage()),
+              );
+            },
           ),
           ListTile(
-            title: Text('パスワード変更'),
-            onTap: null,
+            title: const Text('パスワード変更'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChangePasswordPage()),
+              );
+            },
           ),
-          ListTile(
+          const ListTile(
             title: Text('パスワードをリセット'),
-            onTap: null,
           ),
-          Logout(
+          const Logout(
             key: Key('logout'),
           ),
         ],
