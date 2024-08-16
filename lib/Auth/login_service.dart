@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 
@@ -14,17 +13,30 @@ const macLength = 16;
 // loggerのインスタンスを作成
 final Logger logger = Logger();
 
-// APIキーとサーバーのURLの定義
-final String apiKey = dotenv.env['API_KEY']!;
-final String serverUrl = dotenv.env['SERVER_URL']!;
-
 class LoginService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   late SecretKey _key;
   bool _isInitialized = false;
 
-  // コンストラクタ
-  LoginService();
+  // ログイン状態を確認する
+  Future<bool> isLoggedIn() async {
+    await _ensureInitialized();
+    final username = await _storage.read(key: 'username');
+    final password = await _storage.read(key: 'password');
+    return username != null && password != null;
+  }
+
+  // ログアウト処理を行い、保存されたデータを削除する
+  Future<void> logout() async {
+    await _ensureInitialized();
+    try {
+      await _storage.deleteAll();
+      _isInitialized = false;
+    } catch (e) {
+      logger.e('Failed to log out', error: e);
+      throw Exception('ログアウト処理に失敗しました。');
+    }
+  }
 
   // サービスを初期化して暗号化キーを設定する
   Future<void> initialize() async {
@@ -101,22 +113,6 @@ class LoginService {
       logger.e('Decryption failed', error: e);
       throw Exception('セキュリティ上のエラーが発生しました。');
     }
-  }
-
-  // 全てのデータを削除し、ログアウトする
-  Future<void> logout() async {
-    await _storage.deleteAll();
-    _isInitialized = false;
-  }
-
-  // ユーザーがログインしているかどうかをチェックする
-  Future<bool> isLoggedIn() async {
-    final keys = await Future.wait([
-      _storage.read(key: 'encryption_key'),
-      _storage.read(key: 'username'),
-      _storage.read(key: 'password'),
-    ]);
-    return keys.every((key) => key != null);
   }
 
   // 暗号化されたログイン情報を安全なストレージに保存する

@@ -3,6 +3,7 @@ import 'package:rss_news/auth/logout.dart';
 import 'package:rss_news/setting/account/change_email.dart' as change_email;
 import 'package:rss_news/setting/account/change_password.dart';
 import 'package:rss_news/setting/account/change_username.dart';
+import 'package:rss_news/setting/account/view_account.dart';
 
 // アカウント設定画面
 class AccountSetting extends StatelessWidget {
@@ -16,8 +17,15 @@ class AccountSetting extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          const ListTile(
-            title: Text('アカウント情報'),
+          ListTile(
+            title: const Text('アカウント情報'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewAccountPage()),
+              );
+            },
           ),
           ListTile(
             title: const Text('ユーザー名変更'),

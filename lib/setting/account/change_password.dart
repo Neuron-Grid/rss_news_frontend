@@ -20,43 +20,47 @@ class ChangePassword extends State<ChangePasswordPage> {
       appBar: AppBar(
         title: const Text('Passwordを変更'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _currentPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Current Password',
+      body: Center(
+        // Centerでラップして中央に配置
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _currentPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: '現在のパスワード',
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _newPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'New Password',
+              const SizedBox(height: 16.0),
+              TextField(
+                controller: _newPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: '新しいパスワード',
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Confirm Password',
+              const SizedBox(height: 16.0),
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'パスワードの確認',
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                // TODO: Emailを変更する処理を実装する
-                // APIを呼び出して処理を実行する
-              },
-              child: const Text('Passwordを変更'),
-            ),
-          ],
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  // TODO: Passwordを変更する処理を実装する
+                  // APIを呼び出して処理を実行する
+                },
+                child: const Text('Passwordを変更'),
+              ),
+            ],
+          ),
         ),
       ),
     );

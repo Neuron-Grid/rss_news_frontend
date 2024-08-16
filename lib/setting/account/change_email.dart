@@ -20,45 +20,47 @@ class ChangeEmail extends State<ChangeEmailPage> {
       appBar: AppBar(
         title: const Text('Emailを変更する'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'New Email',
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: '新しいEmail',
+                  ),
+                  validator: AccountValidator.validateUsername,
                 ),
-                validator: AccountValidator.validateUsername,
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                  ),
+                  validator: AccountValidator.validatePassword,
                 ),
-                validator: AccountValidator.validatePassword,
-              ),
-              const SizedBox(height: 16.0),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          // TODO: Emailを変更する処理を実装する
-                          // APIを呼び出して処理を実行する
-                          // API呼び出し後にローディング状態を解除し、エラーメッセージなどを表示する
-                        }
-                      },
-                      child: const Text('Emailを変更する'),
-                    ),
-            ],
+                const SizedBox(height: 16.0),
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            // ここでAPIを叩く
+                          }
+                        },
+                        child: const Text('Emailを変更する'),
+                      ),
+              ],
+            ),
           ),
         ),
       ),

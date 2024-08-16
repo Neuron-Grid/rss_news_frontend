@@ -21,6 +21,8 @@ dependencies:
   provider: ^6.1.2
   http: ^1.2.1
   flutter_dotenv: ^5.1.0
+  supabase_flutter: ^2.6.0
+  supabase_auth_ui: ^0.5.0
 
 flutter_native_splash:
   color: '#add8e6'

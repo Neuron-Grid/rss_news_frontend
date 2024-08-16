@@ -4,10 +4,16 @@ import 'package:logger/logger.dart';
 import 'package:rss_news/auth/login_page.dart';
 import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/reader/main_page.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
-  dotenv.load();
+void main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
   runApp(const MyApp());
 }
 
@@ -16,23 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sourceHanCodeJPTextTheme = Theme.of(context).textTheme.apply(
-          fontFamily: 'Source Han Code JP',
-        );
-
-    final darkSourceHanCodeJPTextTheme = ThemeData.dark().textTheme.apply(
-          fontFamily: 'Source Han Code JP',
-        );
-
     return MaterialApp(
       title: 'RSS News',
       theme: ThemeData(
-        textTheme: sourceHanCodeJPTextTheme,
+        fontFamily: 'SourceHanCodeJP',
       ),
-      darkTheme: ThemeData.dark().copyWith(
-        textTheme: darkSourceHanCodeJPTextTheme,
-      ),
-      themeMode: ThemeMode.system,
       home: const AuthCheckPage(),
     );
   }

@@ -116,7 +116,7 @@ class UsedModules extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('使用したモジュール', style: titleStyle),
+        Text('使用したもの', style: titleStyle),
         SizedBox(height: 10),
         Text(
           'このアプリは、Flutterを使用して開発されたアプリケーションです。',

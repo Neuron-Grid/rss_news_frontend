@@ -20,45 +20,47 @@ class ChangeUsername extends State<ChangeUsernamePage> {
       appBar: AppBar(
         title: const Text('ユーザー名を変更'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: '新しいユーザー名',
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: '新しいユーザー名',
+                  ),
+                  validator: AccountValidator.validateEmail,
                 ),
-                validator: AccountValidator.validateEmail,
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                  ),
+                  validator: AccountValidator.validatePassword,
                 ),
-                validator: AccountValidator.validatePassword,
-              ),
-              const SizedBox(height: 16.0),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          // TODO: Emailを変更する処理を実装する
-                          // APIを呼び出して処理を実行する
-                          // API呼び出し後にローディング状態を解除し、エラーメッセージなどを表示する
-                        }
-                      },
-                      child: const Text('ユーザー名を変更'),
-                    ),
-            ],
+                const SizedBox(height: 16.0),
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            // TODO: Emailを変更する処理を実装する
+                          }
+                        },
+                        child: const Text('ユーザー名を変更'),
+                      ),
+              ],
+            ),
           ),
         ),
       ),

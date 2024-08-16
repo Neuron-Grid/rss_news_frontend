@@ -90,8 +90,6 @@ class LoginPageState extends State<LoginPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        UsernameInputField(controller: _usernameController),
-        const SizedBox(height: 20),
         EmailInputField(controller: _emailController),
         const SizedBox(height: 20),
         PasswordInputField(controller: _passwordController),
@@ -104,20 +102,38 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginButton() {
-    return ElevatedButton(
-      onPressed: _authenticateUser,
-      child: const Text('ログイン'),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _authenticateUser,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          backgroundColor: Colors.blue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+        ),
+        child: const Text(
+          'ログイン',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildSignUpLink() {
-    return InkWell(
-      onTap: _navigateToSignUp,
-      child: const Text(
-        'アカウントを持ってない方はこちら',
-        style: TextStyle(
-          color: Colors.blue,
-          decoration: TextDecoration.underline,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: InkWell(
+        onTap: _navigateToSignUp,
+        child: const Text(
+          'アカウントを持ってない方はこちら',
+          style: TextStyle(
+            color: Colors.blue,
+            decoration: TextDecoration.underline,
+          ),
         ),
       ),
     );
