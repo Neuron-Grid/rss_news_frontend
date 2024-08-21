@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rss_news/auth/login_service.dart';
+import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/auth/signup_page.dart';
 import 'package:rss_news/reader/main_page.dart';
 import 'package:rss_news/widget/account_component.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,20 +16,20 @@ class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final LoginService _loginService = LoginService();
+  late AuthService _authService;
 
   @override
   void initState() {
     super.initState();
+    final SupabaseClient client = Supabase.instance.client;
+    _authService = SupabaseUserService(client);
     _checkIfAlreadyLoggedIn();
   }
 
   Future<void> _checkIfAlreadyLoggedIn() async {
-    await _loginService.initialize();
-    final bool isLoggedIn = await _loginService.isLoggedIn();
+    final User? currentUser = _authService.getCurrentUser();
     if (!mounted) return;
-    if (isLoggedIn) {
+    if (currentUser != null) {
       _navigateToHomePage();
     }
   }
@@ -37,26 +38,39 @@ class LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       final String email = _emailController.text;
       final String password = _passwordController.text;
-      final String username = _usernameController.text;
       try {
-        await _loginService.saveLoginInfo(email, username, password);
-      } catch (e) {
+        final user = await _authService.signIn(email, password);
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('ログインに失敗しました。')),
-        );
-        return;
+        if (user != null) {
+          _navigateToHomePage();
+        } else {
+          _showError('ログインに失敗しました。ユーザーが見つかりません。');
+        }
+      } catch (e) {
+        _showError('ログイン中にエラーが発生しました: $e');
       }
-      if (!mounted) return;
-      _navigateToHomePage();
     }
   }
 
   void _navigateToHomePage() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const MyHomePage()),
+      MaterialPageRoute(builder: (context) => const MainPage()),
     );
+  }
+
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -76,7 +90,7 @@ class LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginForm() {
     return Center(
-      child: Container(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -88,7 +102,8 @@ class LoginPageState extends State<LoginPage> {
 
   Widget _buildFormFields() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         EmailInputField(controller: _emailController),
         const SizedBox(height: 20),

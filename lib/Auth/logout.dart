@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/auth/login_page.dart';
-import 'package:rss_news/auth/login_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Logout extends StatefulWidget {
   const Logout({super.key});
+
   @override
   State<Logout> createState() => _LogoutState();
 }
 
 class _LogoutState extends State<Logout> {
+  final AuthService _authService =
+      SupabaseUserService(Supabase.instance.client);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,17 +30,17 @@ class _LogoutState extends State<Logout> {
     );
   }
 
-  // ログアウト処理を行う。
+  // Supabaseを使用してログアウト処理
   Future<void> _handleLogout() async {
     try {
-      await LoginService().logout();
+      await _authService.signOut();
       _navigateToLoginPage();
     } catch (e) {
       _showErrorDialog('ログアウトに失敗しました。');
     }
   }
 
-  // ログインページに移動し、以前のすべてのルートを削除します。
+  // ログインページに移動し、以前のすべてのルートを削除
   void _navigateToLoginPage() {
     if (mounted) {
       Navigator.pushAndRemoveUntil(
@@ -46,7 +51,7 @@ class _LogoutState extends State<Logout> {
     }
   }
 
-  // 与えられたメッセージとともにエラーダイアログを表示する。
+  // 与えられたメッセージとともにエラーダイアログを表示
   void _showErrorDialog(String message) {
     if (mounted) {
       showDialog(

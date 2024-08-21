@@ -14,7 +14,13 @@ class SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +35,10 @@ class SignUpPageState extends State<SignUpPage> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _buildEmailField(),
-                const SizedBox(height: 20),
-                _buildUsernameField(),
                 const SizedBox(height: 20),
                 _buildPasswordField(),
                 const SizedBox(height: 20),
@@ -56,14 +60,6 @@ class SignUpPageState extends State<SignUpPage> {
       validator: AccountValidator.validateEmail,
       keyboardType: TextInputType.emailAddress,
       icon: Icons.email,
-    );
-  }
-
-  Widget _buildUsernameField() {
-    return InputField(
-      labelText: 'ユーザー名',
-      controller: _usernameController,
-      validator: AccountValidator.validateUsername,
     );
   }
 
@@ -101,13 +97,16 @@ class SignUpPageState extends State<SignUpPage> {
 
   void _handleSignUp() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final currentContext = context;
-      _showSnackBar(context, '登録処理を行っています...');
-      final success = await _attemptSignUp();
-      final message = success ? 'アカウントが作成されました！' : 'アカウント作成に失敗しました。';
-      if (!mounted) return;
-      _showSnackBar(currentContext, message);
+      _processSignUp(context);
     }
+  }
+
+  void _processSignUp(BuildContext currentContext) async {
+    _showSnackBar(currentContext, '登録処理を行っています...');
+    final success = await _attemptSignUp();
+    final message = success ? 'アカウントが作成されました！' : 'アカウント作成に失敗しました。';
+    if (!currentContext.mounted) return;
+    _showSnackBar(currentContext, message);
   }
 
   void _showSnackBar(BuildContext context, String message) {
@@ -123,24 +122,31 @@ class SignUpPageState extends State<SignUpPage> {
       final response = await Supabase.instance.client.auth.signUp(
         email: _emailController.text,
         password: _passwordController.text,
-        data: {'username': _buildUsernameField()},
       );
+
+      if (!mounted) return false;
       if (response.user == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('アカウント作成に失敗しました。')),
-          );
-        }
+        _showSnackBar(context, 'アカウント作成に失敗しました。');
         return false;
       }
+
       return true;
     } catch (e) {
+      final errorMessage = e is AuthException ? e.message : '不明なエラーが発生しました';
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('アカウント作成中にエラーが発生しました: $e')),
+          SnackBar(content: Text('アカウント作成中にエラーが発生しました: $errorMessage')),
         );
       }
       return false;
+    }
+  }
+
+  void showSnackBar(BuildContext context, String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
   }
 

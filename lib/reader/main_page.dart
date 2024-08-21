@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:rss_news/reader/add_feed.dart';
+import 'package:rss_news/auth/auth_service.dart';
+import 'package:rss_news/feed/add_feed.dart';
+import 'package:rss_news/feed/remove_feed.dart';
 import 'package:rss_news/validator/url_opener.dart';
 import 'package:rss_news/widget/reader/left_column.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainPageApp extends StatelessWidget {
+  const MainPageApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: MyHomePage(),
+        body: MainPage(),
       ),
     );
   }
@@ -18,14 +21,23 @@ class MyApp extends StatelessWidget {
   static of(BuildContext context) {}
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
 
   @override
-  HomePage createState() => HomePage();
+  MainPageState createState() => MainPageState();
 }
 
-class HomePage extends State<MyHomePage> {
+class MainPageState extends State<MainPage> {
+  late final AuthService authService;
+
+  @override
+  void initState() {
+    super.initState();
+    final supabaseClient = Supabase.instance.client;
+    authService = SupabaseUserService(supabaseClient);
+  }
+
   Future<void> _refreshFeed() async {
     // TODO: フィードを更新するロジックをここに追加
     await Future.delayed(const Duration(seconds: 2));
@@ -53,7 +65,6 @@ class HomePage extends State<MyHomePage> {
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity! > 0) {
-            // スワイプが左から右に行われた時
             Scaffold.of(context).openDrawer();
           }
         },
@@ -81,14 +92,30 @@ class HomePage extends State<MyHomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddFeed()),
-          );
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RemoveFeed(authService: authService)),
+              );
+            },
+            child: const Icon(Icons.remove),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddFeed()),
+              );
+            },
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rss_news/reader/dummy_screen.dart';
 import 'package:rss_news/reader/left_column/acknowledgement.dart';
 import 'package:rss_news/reader/left_column/main_setting.dart';
+import 'package:rss_news/reader/preparing_screen.dart';
 
 class LeftColumn extends StatelessWidget {
   const LeftColumn({super.key});
@@ -43,9 +43,9 @@ class LeftColumn extends StatelessWidget {
           _buildListTile(context, Icons.settings, '設定', const Setting()),
           _buildListTile(context, Icons.info, '謝辞', const Acknowledgement()),
           _buildListTile(
-              context, Icons.description, '利用規約', const DummyScreen()),
-          _buildListTile(
-              context, Icons.privacy_tip, 'プライバシーポリシー', const DummyScreen()),
+              context, Icons.description, '利用規約', const PreparingScreen()),
+          _buildListTile(context, Icons.privacy_tip, 'プライバシーポリシー',
+              const PreparingScreen()),
         ],
       ),
     );

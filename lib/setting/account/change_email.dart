@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/validator/account_validator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ChangeEmailPage extends StatefulWidget {
   const ChangeEmailPage({super.key});
@@ -13,6 +15,9 @@ class ChangeEmail extends State<ChangeEmailPage> {
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+
+  final SupabaseUserService _authService =
+      SupabaseUserService(Supabase.instance.client);
 
   @override
   Widget build(BuildContext context) {
@@ -29,41 +34,72 @@ class ChangeEmail extends State<ChangeEmailPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: '新しいEmail',
-                  ),
-                  validator: AccountValidator.validateUsername,
-                ),
+                _buildEmailField(),
                 const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
-                  validator: AccountValidator.validatePassword,
-                ),
+                _buildPasswordField(),
                 const SizedBox(height: 16.0),
                 _isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            // ここでAPIを叩く
-                          }
-                        },
-                        child: const Text('Emailを変更する'),
-                      ),
+                    : _buildChangeEmailButton(context),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _emailController,
+      decoration: const InputDecoration(
+        labelText: '新しいEmail',
+      ),
+      validator: AccountValidator.validateUsername,
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: _passwordController,
+      obscureText: true,
+      decoration: const InputDecoration(
+        labelText: 'Password',
+      ),
+      validator: AccountValidator.validatePassword,
+    );
+  }
+
+  Widget _buildChangeEmailButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: _isLoading ? null : () => _changeEmail(context),
+      child: const Text('Emailを変更する'),
+    );
+  }
+
+  Future<void> _changeEmail(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await _authService.changeEmail(
+          _emailController.text,
+          _passwordController.text,
+        );
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('メールアドレスが変更されました')),
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('メールアドレスの変更に失敗しました: $error')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }

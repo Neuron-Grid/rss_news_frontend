@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/auth/login_page.dart';
-import 'package:rss_news/auth/login_service.dart';
-import 'package:rss_news/reader/dummy_screen.dart';
+import 'package:rss_news/reader/preparing_screen.dart';
 import 'package:rss_news/setting/account/account_setting.dart';
 import 'package:rss_news/setting/app/app_setting.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // 設定画面ウィジェット
 class Setting extends StatefulWidget {
@@ -23,12 +23,8 @@ class SettingState extends State<Setting> {
       body: ListView(
         children: [
           _buildListTile(
-            title: 'RSSフィード設定',
-            destination: const DummyScreen(),
-          ),
-          _buildListTile(
-            title: '表示設定',
-            destination: const DummyScreen(),
+            title: 'RSSフィードの設定',
+            destination: const PreparingScreen(),
           ),
           _buildListTile(
             title: 'アカウント設定',
@@ -63,8 +59,7 @@ class SettingState extends State<Setting> {
     return ListTile(
       title: const Text('ログアウト'),
       onTap: () async {
-        final loginService = LoginService();
-        await loginService.logout();
+        await Supabase.instance.client.auth.signOut();
         if (mounted) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const LoginPage()),

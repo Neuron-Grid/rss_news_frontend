@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
+import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/auth/login_page.dart';
-import 'package:rss_news/auth/login_service.dart';
 import 'package:rss_news/reader/main_page.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -38,31 +38,33 @@ class AuthCheckPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var logger = Logger();
+    final authService = SupabaseUserService(Supabase.instance.client);
 
-    return FutureBuilder<bool>(
-      future: LoginService().isLoggedIn(),
+    return FutureBuilder<User?>(
+      future: Future.value(authService.getCurrentUser()), // ログイン状態を取得
       builder: (context, snapshot) {
         // ローディング中の表示
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
+        }
+
+        // エラー発生時の表示
+        if (snapshot.hasError) {
+          logger.e('Error\n ${snapshot.error}');
+          return const Scaffold(
+            body: Center(child: Text('エラーが発生しました。')),
+          );
+        }
+
+        // ログイン状態に応じた表示
+        if (snapshot.hasData && snapshot.data != null) {
+          logger.i("User is logged in: ${authService.getEmail(snapshot.data)}");
+          return const MainPageApp();
         } else {
-          // エラー発生時の表示
-          if (snapshot.hasError) {
-            // エラーをログに記録
-            logger.e('Error\n ${snapshot.error}');
-            return const Scaffold(
-              body: Center(child: Text('エラーが発生しました。')),
-            );
-          } else {
-            // ログイン状態に応じた表示
-            if (snapshot.hasData && snapshot.data == true) {
-              return const MyHomePage();
-            } else {
-              return const LoginPage();
-            }
-          }
+          logger.i("User is not logged in.");
+          return const LoginPage();
         }
       },
     );
