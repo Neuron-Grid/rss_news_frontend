@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/feed/add_feed.dart';
+import 'package:rss_news/feed/feed_list.dart';
 import 'package:rss_news/feed/remove_feed.dart';
-import 'package:rss_news/validator/url_opener.dart';
 import 'package:rss_news/widget/reader/left_column.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -74,19 +74,8 @@ class MainPageState extends State<MainPage> {
             children: <Widget>[
               Expanded(
                 flex: 2,
-                child: ListView.builder(
-                  itemCount: 30,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text('Title $index'),
-                      subtitle: Text('This is the content of item $index.'),
-                      onTap: () {
-                        UrlOpener(context)
-                            .openUrl('https://www.google.com/webhp?hl=ja');
-                      },
-                    );
-                  },
-                ),
+                child:
+                    FeedList(authService: authService as SupabaseUserService),
               ),
             ],
           ),

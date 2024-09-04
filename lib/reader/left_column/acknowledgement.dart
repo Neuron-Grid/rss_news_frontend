@@ -146,13 +146,8 @@ class UsedModules extends StatelessWidget {
           url: 'https://pub.dev/packages/url_launcher',
         ),
         OpenableText(
-          prefix: 'RSS News API: ',
-          url: 'https://gitlab.com/Neuron-Grid/RSS_News_API',
-        ),
-        OpenableText(
-          prefix: 'Source Han Code JP: ',
-          url:
-              'https://github.com/adobe-fonts/source-han-code-jp/blob/master/LICENSE.txt',
+          prefix: 'Noto Sans CJK: ',
+          url: 'https://github.com/notofonts/noto-cjk/tree/main/Sans',
         ),
       ],
     );

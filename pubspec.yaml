@@ -24,10 +24,11 @@ dependencies:
   supabase_flutter: ^2.6.0
   supabase_auth_ui: ^0.5.0
   intl: ^0.19.0
+  logging: ^1.2.0
+  webfeed_plus: ^1.1.2
 
 flutter_native_splash:
   color: '#add8e6'
-  # image: 'assets/Image/RSS_icon.png'
   color_dark: '#262626'
   fullscreen: true
 
@@ -38,10 +39,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   fonts:
-    - family: Source Han Code JP
+    - family: NotoSansMonoCJKjp
       fonts:
-        - asset: assets/fonts/SourceHanCodeJP.ttc
-          weight: 500
+        - asset: assets/fonts/NotoSansMonoCJKjp-VF.otf
   assets:
     - assets/images/1500x500.png
     - .env

@@ -5,18 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06d3be08-65b9-4c96-8cb0-082d9c2fbf7d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/other.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/Auth/login_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Auth/login_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/reader/main_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/reader/main_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Auth/signup_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Auth/signup_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/setting/account/account_setting.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/setting/account/account_setting.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/validator/api_validator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/validator/api_validator.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/validator/url_opener.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/validator/url_opener.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +71,7 @@
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/neurongrid/Filen/Git/Individual_Projects/rss_news",
-    "settings.editor.selected.configurable": "preferences.updates",
+    "settings.editor.selected.configurable": "preferences.language.Kotlin.scripting",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>

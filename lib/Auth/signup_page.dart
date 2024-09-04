@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rss_news/auth/login_page.dart';
 import 'package:rss_news/validator/account_validator.dart';
 import 'package:rss_news/widget/account_component.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -104,9 +105,16 @@ class SignUpPageState extends State<SignUpPage> {
   void _processSignUp(BuildContext currentContext) async {
     _showSnackBar(currentContext, '登録処理を行っています...');
     final success = await _attemptSignUp();
-    final message = success ? 'アカウントが作成されました！' : 'アカウント作成に失敗しました。';
+    final message = success ? 'アカウントが作成されました。' : 'アカウント作成に失敗しました。';
     if (!currentContext.mounted) return;
     _showSnackBar(currentContext, message);
+    // アカウント作成に成功した場合、ログインページに遷移する
+    if (success) {
+      Navigator.pushReplacement(
+        currentContext,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
   }
 
   void _showSnackBar(BuildContext context, String message) {
@@ -123,16 +131,23 @@ class SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-
       if (!mounted) return false;
       if (response.user == null) {
         _showSnackBar(context, 'アカウント作成に失敗しました。');
         return false;
       }
-
       return true;
     } catch (e) {
-      final errorMessage = e is AuthException ? e.message : '不明なエラーが発生しました';
+      String errorMessage;
+      if (e is AuthException) {
+        if (e.message.contains('User already registered')) {
+          errorMessage = 'そのユーザーは既に登録されています。';
+        } else {
+          errorMessage = e.message;
+        }
+      } else {
+        errorMessage = '不明なエラーが発生しました';
+      }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('アカウント作成中にエラーが発生しました: $errorMessage')),

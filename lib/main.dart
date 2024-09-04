@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'RSS News',
       theme: ThemeData(
-        fontFamily: 'SourceHanCodeJP',
+        fontFamily: 'NotoSansCJK-VF.ttf.ttc',
       ),
       home: const AuthCheckPage(),
     );
@@ -41,7 +41,7 @@ class AuthCheckPage extends StatelessWidget {
     final authService = SupabaseUserService(Supabase.instance.client);
 
     return FutureBuilder<User?>(
-      future: Future.value(authService.getCurrentUser()), // ログイン状態を取得
+      future: Future.value(authService.getCurrentUser()),
       builder: (context, snapshot) {
         // ローディング中の表示
         if (snapshot.connectionState == ConnectionState.waiting) {

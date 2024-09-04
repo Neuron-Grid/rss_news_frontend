@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/auth/auth_service.dart';
+import 'package:rss_news/reader/main_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RemoveFeed extends StatefulWidget {
@@ -116,31 +117,28 @@ class RemoveFeedState extends State<RemoveFeed> {
   }
 
   Future<void> _deleteFeedsAndSubscriptions() async {
-    for (var feedId in selectedFeeds) {
-      await _deleteSubscription(feedId);
-      await _deleteFeed(feedId);
-    }
-  }
-
-  Future<void> _deleteSubscription(dynamic feedId) async {
-    final response = await supabase
-        .from('subscriptions')
-        .delete()
-        .eq('feed_id', feedId)
-        .eq('user_id', currentUser!.id);
-    if (response == null || response.error != null) {
-      throw Exception('サブスクリプションの削除中にエラーが発生しました。');
-    }
-  }
-
-  Future<void> _deleteFeed(dynamic feedId) async {
-    final response = await supabase
-        .from('feeds')
-        .delete()
-        .eq('id', feedId)
-        .eq('user_id', currentUser!.id);
-    if (response == null || response.error != null) {
-      throw Exception('RSSフィードの削除中にエラーが発生しました。');
+    List<int> selectedFeedIds = selectedFeeds.map((id) => id as int).toList();
+    try {
+      for (var feedId in selectedFeedIds) {
+        final response = await supabase.from('feeds').delete().eq('id', feedId);
+        if (response.error != null) {
+          throw Exception('Failed to delete feed: ${response.error.message}');
+        }
+        if (response.data == null || response.data.isEmpty) {
+          throw Exception('No feeds were deleted.');
+        }
+      }
+      selectedFeeds.clear();
+      _showSnackBar('選択されたRSSフィードが正常に削除されました。');
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MainPageApp()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        _showSnackBar('RSSフィードの削除中にエラーが発生しました: $e');
+      }
     }
   }
 
