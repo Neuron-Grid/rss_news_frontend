@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/auth/login_page.dart';
@@ -25,8 +26,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'RSS News',
       theme: ThemeData(
-        fontFamily: 'NotoSansCJK-VF.ttf.ttc',
+        fontFamily: 'NotoSansMonoCJK',
       ),
+      locale: const Locale('ja'),
+      supportedLocales: const [
+        Locale('ja'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
       home: const AuthCheckPage(),
     );
   }

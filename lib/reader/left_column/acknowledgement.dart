@@ -146,7 +146,7 @@ class UsedModules extends StatelessWidget {
           url: 'https://pub.dev/packages/url_launcher',
         ),
         OpenableText(
-          prefix: 'Noto Sans CJK: ',
+          prefix: 'NotoSansMonoCJKjp-VF: ',
           url: 'https://github.com/notofonts/noto-cjk/tree/main/Sans',
         ),
       ],

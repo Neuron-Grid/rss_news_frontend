@@ -68,7 +68,6 @@ class InputFieldState extends State<InputField> {
 // Email入力フィールドウィジェット
 class EmailInputField extends StatelessWidget {
   final TextEditingController controller;
-
   const EmailInputField({super.key, required this.controller});
 
   @override
@@ -88,7 +87,6 @@ class EmailInputField extends StatelessWidget {
 // パスワード入力フィールドウィジェット
 class PasswordInputField extends StatelessWidget {
   final TextEditingController controller;
-
   const PasswordInputField({super.key, required this.controller});
 
   @override
@@ -100,26 +98,6 @@ class PasswordInputField extends StatelessWidget {
       isObscure: true,
       // パスワードのバリデーションを適用
       validator: AccountValidator.validatePassword,
-      hasOutline: true,
-    );
-  }
-}
-
-// ユーザー名入力フィールドウィジェット
-class UsernameInputField extends StatelessWidget {
-  final TextEditingController controller;
-
-  const UsernameInputField({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return InputField(
-      labelText: 'ユーザー名',
-      keyboardType: TextInputType.text,
-      controller: controller,
-      isObscure: false,
-      // ユーザー名のバリデーションを適用
-      validator: AccountValidator.validateUsername,
       hasOutline: true,
     );
   }

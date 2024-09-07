@@ -6,8 +6,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FeedList extends StatelessWidget {
   final SupabaseUserService authService;
+  final void Function(String url) onFeedTap;
+  final List<TimestampedFeedItem<dynamic>> feedItems;
 
-  const FeedList({super.key, required this.authService});
+  // キャッシュ用のMap
+  static final Map<String, CachedFeed> _feedCache = {};
+
+  const FeedList({
+    super.key,
+    required this.authService,
+    required this.onFeedTap,
+    required this.feedItems,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +32,18 @@ class FeedList extends StatelessWidget {
       builder: (BuildContext context,
           AsyncSnapshot<List<TimestampedFeedItem<dynamic>>> snapshot) {
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('フィードの読み込み中にエラーが発生しました。再試行してください。'),
+              ElevatedButton(
+                onPressed: () {
+                  // リトライロジック
+                },
+                child: const Text('再試行'),
+              ),
+            ],
+          );
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -36,14 +57,33 @@ class FeedList extends StatelessWidget {
         return ListView.builder(
           itemCount: feedItems.length,
           itemBuilder: (context, index) {
-            final feedItem = feedItems[index];
-            return ListTile(
-              contentPadding: const EdgeInsets.all(10.0),
-              title: Text(feedItem.item.title ?? 'No Title'),
-              subtitle: Text(feedItem.dateTime.toString()),
-            );
+            return buildFeedItem(context, feedItems[index]);
           },
         );
+      },
+    );
+  }
+
+  Widget buildFeedItem(
+      BuildContext context, TimestampedFeedItem<dynamic> feedItem) {
+    return ListTile(
+      contentPadding: const EdgeInsets.all(10.0),
+      title: Text(
+        feedItem.item.title ?? 'No Title',
+        style: const TextStyle(
+          fontFamily: 'NotoSansMonoCJK',
+          fontSize: 16.0,
+        ),
+      ),
+      subtitle: Text(
+        feedItem.dateTime.toString(),
+        style: const TextStyle(
+          fontFamily: 'NotoSansMonoCJK',
+          fontSize: 14.0,
+        ),
+      ),
+      onTap: () {
+        onFeedTap(feedItem.item.link ?? '');
       },
     );
   }
@@ -61,6 +101,7 @@ class FeedList extends StatelessWidget {
     }
   }
 
+// クラス外で定義
   Future<List<TimestampedFeedItem<dynamic>>> fetchAndParseFeeds(
       SupabaseClient supabase, String userId) async {
     try {
@@ -68,15 +109,34 @@ class FeedList extends StatelessWidget {
       final List<TimestampedFeedItem<dynamic>> allFeedItems = [];
       for (var feed in feedList) {
         final feedUrl = feed['url'];
-        final feedItems = await fetchAndParseFeed(feedUrl);
+        final feedItems = await fetchFeed(feedUrl);
         allFeedItems.addAll(feedItems);
       }
-
       allFeedItems.sort((a, b) => b.dateTime.compareTo(a.dateTime));
       return allFeedItems;
     } catch (e) {
       throw Exception('フィードの取得と解析に失敗しました: $e');
     }
+  }
+
+  Future<List<TimestampedFeedItem<dynamic>>> fetchFeed(String url,
+      {bool useCache = true}) async {
+    const cacheDuration = Duration(minutes: 10);
+    final now = DateTime.now();
+
+    // キャッシュが存在し、有効期限内の場合はキャッシュを返す
+    if (useCache && _feedCache.containsKey(url)) {
+      final cachedFeed = _feedCache[url]!;
+      if (now.difference(cachedFeed.timestamp) < cacheDuration) {
+        return cachedFeed.feedItems;
+      }
+    }
+
+    // 有効なキャッシュがない場合、フィードを再取得してキャッシュに保存
+    final feedItems = await fetchAndParseFeed(url);
+    _feedCache[url] = CachedFeed(feedItems, now);
+
+    return feedItems;
   }
 
   Future<List<TimestampedFeedItem<dynamic>>> fetchAndParseFeed(
@@ -89,6 +149,14 @@ class FeedList extends StatelessWidget {
 
       final xmlData = response.body.toString();
       final feedType = getFeedType(xmlData);
+
+      // 更新日付の比較によるキャッシュの管理
+      final lastModified = response.headers['last-modified'];
+      if (_feedCache.containsKey(url) &&
+          _feedCache[url]!.lastModified == lastModified) {
+        return _feedCache[url]!.feedItems;
+      }
+
       switch (feedType) {
         case FeedTypes.rss:
           return RssFeedItems(xmlData).getItems();
@@ -103,8 +171,8 @@ class FeedList extends StatelessWidget {
     }
   }
 
+  // RSS または Atom フィードを判定するロジック
   FeedTypes getFeedType(String xmlData) {
-    // RSS または Atom フィードを判定するロジック
     if (xmlData.contains('<rss')) {
       return FeedTypes.rss;
     } else if (xmlData.contains('<feed')) {
@@ -113,6 +181,15 @@ class FeedList extends StatelessWidget {
       throw Exception('Unknown feed type');
     }
   }
+}
+
+// キャッシュされたフィードの情報を保持するクラス
+class CachedFeed {
+  final List<TimestampedFeedItem<dynamic>> feedItems;
+  final DateTime timestamp;
+  final String? lastModified;
+
+  CachedFeed(this.feedItems, this.timestamp, [this.lastModified]);
 }
 
 enum FeedTypes { rss, atom }

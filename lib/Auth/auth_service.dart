@@ -2,6 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class AuthService {
+  get client => null;
+
   User? getCurrentUser();
   String getEmail(User? user);
   String getCreationDate(User? user);
@@ -10,6 +12,7 @@ abstract class AuthService {
 }
 
 class SupabaseUserService implements AuthService {
+  @override
   final SupabaseClient client;
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
