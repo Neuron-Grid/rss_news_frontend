@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rss_news/auth/auth_service.dart';
 import 'package:rss_news/feed/add_feed.dart';
 import 'package:rss_news/feed/feed_list.dart';
+import 'package:rss_news/feed/feed_service.dart';
 import 'package:rss_news/feed/remove_feed.dart';
-import 'package:rss_news/feed/timestamped_feed_item.dart';
 import 'package:rss_news/validator/url_opener.dart';
 import 'package:rss_news/widget/reader/left_column.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,58 +32,64 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   late final AuthService authService;
-  List<TimestampedFeedItem<dynamic>> _feedItems = []; // フィードアイテムのリストを管理
-  bool _isLoading = false; // ローディング状態を管理
+  late final FeedService feedService;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    final supabaseClient = Supabase.instance.client;
-    authService = SupabaseUserService(supabaseClient);
-    _refreshFeed(); // 初期フィードの取得
+    _initializeServices();
+    _refreshFeed();
   }
 
+  // サービスの初期化
+  void _initializeServices() {
+    final supabaseClient = Supabase.instance.client;
+    authService = SupabaseUserService(supabaseClient);
+    feedService = FeedService();
+  }
+
+  // フィードをリフレッシュする処理
   Future<void> _refreshFeed() async {
     if (!mounted) return;
-
-    setState(() {
-      _isLoading = true; // ローディング中フラグをオン
-    });
-
+    _setLoading(true);
     final user = authService.getCurrentUser();
     if (user == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('ユーザーが認証されていません')),
-        );
-      }
+      _showMessage('ユーザーが認証されていません');
+      _setLoading(false);
       return;
     }
-
     try {
-      // Supabaseからフィードデータを取得して解析
-      final feedItems = await fetchAndParseFeeds(authService.client, user.id);
-
-      if (mounted) {
-        setState(() {
-          _feedItems = feedItems;
-          _isLoading = false; // ローディング完了
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('フィードを再取得しました')),
-        );
-      }
+      await feedService.forceUpdateFeeds();
+      _showMessage('フィードを再取得しました');
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false; // エラー時にもローディングフラグを解除
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('フィードの再取得に失敗しました: $e')),
-        );
-      }
+      _showMessage('フィードの再取得に失敗しました: $e');
+    } finally {
+      _setLoading(false);
     }
+  }
+
+  // ローディング状態を設定
+  void _setLoading(bool isLoading) {
+    if (mounted) {
+      setState(() {
+        _isLoading = isLoading;
+      });
+    }
+  }
+
+  // メッセージを表示
+  void _showMessage(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
+  // Drawerを開く処理
+  void _openDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
   }
 
   @override
@@ -95,7 +101,7 @@ class MainPageState extends State<MainPage> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                _openDrawer(context);
               },
             );
           },
@@ -104,20 +110,20 @@ class MainPageState extends State<MainPage> {
       drawer: const LeftColumn(),
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
-          if (details.primaryVelocity! > 0) {
-            Scaffold.of(context).openDrawer();
+          if (details.primaryVelocity! > 1000) {
+            _openDrawer(context);
           }
         },
         child: RefreshIndicator(
-          onRefresh: _refreshFeed, // リフレッシュ時にフィードを再取得
+          onRefresh: _refreshFeed,
           child: _isLoading
-              ? const Center(child: CircularProgressIndicator()) // ローディング表示
+              ? const Center(child: CircularProgressIndicator())
               : FeedList(
                   authService: authService as SupabaseUserService,
                   onFeedTap: (String url) {
                     UrlOpener(context).openUrl(url);
                   },
-                  feedItems: _feedItems, // FeedListにフィードデータを渡す
+                  feedService: feedService,
                 ),
         ),
       ),
@@ -129,7 +135,8 @@ class MainPageState extends State<MainPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => RemoveFeed(authService: authService)),
+                  builder: (context) => RemoveFeed(authService: authService),
+                ),
               );
             },
             child: const Icon(Icons.remove),

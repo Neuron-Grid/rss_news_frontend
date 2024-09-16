@@ -29,9 +29,6 @@ class MyApp extends StatelessWidget {
         fontFamily: 'NotoSansMonoCJK',
       ),
       locale: const Locale('ja'),
-      supportedLocales: const [
-        Locale('ja'),
-      ],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

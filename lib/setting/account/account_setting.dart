@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rss_news/auth/auth_service.dart';
+import 'package:rss_news/auth/delete_page.dart';
 import 'package:rss_news/auth/logout.dart';
 import 'package:rss_news/reader/preparing_screen.dart';
 import 'package:rss_news/setting/account/change_email.dart' as change_email;
@@ -50,6 +51,11 @@ class AccountSetting extends StatelessWidget {
           ListTile(
             title: const Text('パスワードをリセット'),
             onTap: () => _navigateToPage(context, const PreparingScreen()),
+          ),
+          // アカウント削除ページ
+          ListTile(
+            title: const Text('アカウントを削除'),
+            onTap: () => _navigateToPage(context, const DeletePage()),
           ),
           // ログアウトボタン
           const Logout(
