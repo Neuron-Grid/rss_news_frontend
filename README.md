@@ -1,16 +1,2 @@
-# rss_news
-
-目的: RSS News APIのフロントエンドを作成する
-
-## Getting Started
-
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-
-IOSだけ発生するエラーがあるので原因を特定して修正する
+## 目的
+クロスプラットフォームの連携に対応したRSSリーダーを作成する
